@@ -1,0 +1,225 @@
+Observer Design Pattern
+Definition
+
+The Observer Design Pattern defines a one-to-many dependency between objects.
+
+When the state of one object (Subject) changes, all its dependent objects (Observers) are automatically notified and updated.
+
+It is a behavioral design pattern.
+
+Problem Statement
+
+Consider a YouTube channel.
+
+When a creator uploads a new video:
+
+All subscribers should receive notifications.
+The channel should not need to know the implementation details of each subscriber.
+New subscriber types should be added without modifying channel code.
+
+Without Observer Pattern:
+
+channel.notifyMobileUsers();
+channel.notifyEmailUsers();
+channel.notifySMSUsers();
+
+Every time a new notification type is introduced, the channel code must change.
+
+This violates the Open/Closed Principle.
+
+Solution
+
+Introduce two abstractions:
+
+Subject
+
+Object being observed.
+
+Responsibilities:
+
+Register observers
+Remove observers
+Notify observers
+Observer
+
+Objects interested in updates from the subject.
+
+Responsibilities:
+
+Receive updates
+React to updates
+UML Diagram
+                +----------------+
+                |    Subject     |
+                +----------------+
+                | addObserver()  |
+                | removeObserver()|
+                | notifyObservers()|
+                +----------------+
+                        ^
+                        |
+                        |
+          +--------------------------+
+          |                          |
+          |                          |
++-------------------+     +-------------------+
+| YouTubeChannel    |     | StockMarket       |
++-------------------+     +-------------------+
+
+                        |
+                        |
+                        v
+
+                +----------------+
+                |   Observer     |
+                +----------------+
+                | update()       |
+                +----------------+
+                        ^
+                        |
+        ---------------------------------
+        |               |               |
+        |               |               |
++---------------+ +--------------+ +--------------+
+| MobileUser    | | EmailUser    | | SMSUser      |
++---------------+ +--------------+ +--------------+
+Implementation
+Step 1: Create Observer Interface
+public interface Observer {
+    void update(String message);
+}
+Step 2: Create Concrete Observers
+Mobile User
+public class MobileUser implements Observer {
+
+    private final String name;
+
+    public MobileUser(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void update(String message) {
+        System.out.println(
+            "Mobile Notification for "
+            + name + ": " + message
+        );
+    }
+}
+Email User
+public class EmailUser implements Observer {
+
+    private final String email;
+
+    public EmailUser(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public void update(String message) {
+        System.out.println(
+            "Email sent to "
+            + email + ": " + message
+        );
+    }
+}
+Step 3: Create Subject Interface
+public interface Subject {
+
+    void addObserver(Observer observer);
+
+    void removeObserver(Observer observer);
+
+    void notifyObservers();
+}
+Step 4: Create Concrete Subject
+import java.util.ArrayList;
+import java.util.List;
+
+public class YouTubeChannel implements Subject {
+
+    private final List<Observer> observers;
+
+    private String latestVideo;
+
+    public YouTubeChannel() {
+        observers = new ArrayList<>();
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+
+        for (Observer observer : observers) {
+            observer.update(
+                "New video uploaded: "
+                + latestVideo
+            );
+        }
+    }
+
+    public void uploadVideo(String videoName) {
+
+        this.latestVideo = videoName;
+
+        notifyObservers();
+    }
+}
+Step 5: Client Code
+public class Main {
+
+    public static void main(String[] args) {
+
+        YouTubeChannel channel =
+            new YouTubeChannel();
+
+        Observer user1 =
+            new MobileUser("Pranay");
+
+        Observer user2 =
+            new EmailUser("pranay@gmail.com");
+
+        channel.addObserver(user1);
+        channel.addObserver(user2);
+
+        channel.uploadVideo(
+            "Observer Design Pattern Explained"
+        );
+    }
+}
+Output
+Mobile Notification for Pranay:
+New video uploaded: Observer Design Pattern Explained
+
+Email sent to pranay@gmail.com:
+New video uploaded: Observer Design Pattern Explained
+Sequence Flow
+1. Observer registers with Subject
+
+Subscriber --------> YouTubeChannel
+
+2. Video uploaded
+
+YouTubeChannel.uploadVideo()
+
+3. Subject state changes
+
+latestVideo updated
+
+4. Subject notifies all observers
+
+notifyObservers()
+
+5. Each observer receives update
+
+MobileUser.update()
+EmailUser.update()
