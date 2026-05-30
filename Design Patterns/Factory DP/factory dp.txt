@@ -1,1 +1,51 @@
-factory dp
+What Problem Does It Solve?
+
+Suppose you have different vehicle types:
+
+Car
+Bike
+Truck
+
+Without Factory Pattern:
+
+Vehicle vehicle = new Car();
+
+Later:
+
+Vehicle vehicle = new Bike();
+
+Client code needs to know which concrete class to instantiate.
+
+As the number of classes grows, object creation logic gets scattered throughout the codebase.
+
+Solution
+
+Move object creation logic into a Factory Class.
+
+Instead of:
+
+Vehicle vehicle = new Car();
+
+Use:
+
+Vehicle vehicle = VehicleFactory.getVehicle("CAR");
+
+The factory decides which object to create.
+
+Real Life Example
+
+Think of a restaurant.
+
+You don't go into the kitchen and make food yourself.
+
+You tell the waiter:
+
+Give me a Veg Burger
+
+The kitchen (Factory) creates it and gives it to you.
+
+You don't know:
+
+Which cook made it
+Which ingredients were used
+How it was prepared
