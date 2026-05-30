@@ -1,0 +1,43 @@
+Dependency Inversion Principle (DIP)
+
+Definition:
+
+High-level modules should not depend on low-level modules. Both should depend on abstractions.
+
+Abstractions should not depend on details. Details should depend on abstractions.
+
+Problem Without DIP
+
+Suppose you're building a notification service.
+
+Bad Design
+class EmailService {
+    public void send(String message) {
+        System.out.println("Sending Email: " + message);
+    }
+}
+class NotificationManager {
+
+    private EmailService emailService;
+
+    public NotificationManager() {
+        this.emailService = new EmailService();
+    }
+
+    public void notifyUser(String message) {
+        emailService.send(message);
+    }
+}
+What's wrong?
+
+NotificationManager (high-level business logic) directly depends on EmailService (low-level implementation).
+
+If tomorrow you want:
+
+SMS
+WhatsApp
+Push Notification
+
+You must modify NotificationManager.
+
+This violates DIP.
