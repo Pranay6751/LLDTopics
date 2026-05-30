@@ -1,0 +1,110 @@
+Definition
+
+The Decorator Pattern allows you to add new behavior or features to an object dynamically at runtime without modifying its existing code.
+
+It is a structural design pattern.
+
+Problem Statement
+
+Suppose you're building a Pizza ordering system.
+
+You have:
+
+Plain Pizza = ₹100
+
+Customer can add:
+
+Extra Cheese = +₹20
+Mushroom     = +₹30
+Olives       = +₹25
+
+Possible combinations:
+
+Plain Pizza
+Plain Pizza + Cheese
+Plain Pizza + Mushroom
+Plain Pizza + Cheese + Mushroom
+Plain Pizza + Cheese + Olives
+...
+
+Without Decorator Pattern:
+
+CheesePizza
+CheeseMushroomPizza
+CheeseOlivePizza
+CheeseMushroomOlivePizza
+...
+
+Classes explode as combinations increase.
+
+
+Decorator Pattern is easiest to understand if you build it step by step.
+
+Step 1: Define the Component
+
+This is the common contract.
+
+interface Pizza {
+    String getDescription();
+    int getCost();
+}
+
+Every pizza must tell:
+
+Description
+Cost
+Step 2: Create Concrete Component
+
+This is the base object.
+
+class PlainPizza implements Pizza {
+
+    @Override
+    public String getDescription() {
+        return "Plain Pizza";
+    }
+
+    @Override
+    public int getCost() {
+        return 100;
+    }
+}
+
+Usage:
+
+Pizza pizza = new PlainPizza();
+
+System.out.println(pizza.getDescription());
+System.out.println(pizza.getCost());
+
+Output:
+
+Plain Pizza
+100
+
+Current object:
+
+PlainPizza
+Step 3: Need Additional Features
+
+Customer wants cheese.
+
+Bad approach:
+
+class CheesePizza extends PlainPizza
+
+Then:
+
+class CheeseMushroomPizza extends PlainPizza
+
+Then:
+
+class CheeseOlivePizza extends PlainPizza
+
+Then:
+
+class CheeseOliveMushroomPizza extends PlainPizza
+
+Classes keep increasing.
+
+Decorator solves this.
